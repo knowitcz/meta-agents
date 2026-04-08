@@ -3,7 +3,6 @@ name: 'Meta Agent Designer'
 description: 'Designs, creates, and modifies .agent.md files. Enforces SRP and minimal-context principles. When a new agent is requested, first assesses existing agents and presents a candidate table before acting.'
 model: 'Claude Opus 4.6'
 tools: ['search/codebase', 'edit/editFiles', 'edit/createFile', 'search', 'agent']
-user-invocable: false
 ---
 
 # Meta Agent – Agent Design & Lifecycle

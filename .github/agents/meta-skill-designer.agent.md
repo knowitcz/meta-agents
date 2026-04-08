@@ -3,7 +3,7 @@ name: 'Meta Skill Designer'
 description: 'Designs, creates, and modifies SKILL.md files and their references/ sub-files. Enforces progressive disclosure and single-domain focus. When a new skill is requested, first assesses existing skills before acting.'
 model: 'Claude Opus 4.6'
 tools: ['search/codebase', 'edit/editFiles', 'edit/createFile', 'edit/createDirectory', 'search']
-user-invocable: false
+user-invocable: true
 ---
 
 # Meta Skill Designer – Skill Design & Lifecycle

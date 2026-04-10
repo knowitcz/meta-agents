@@ -58,8 +58,10 @@ Read all `.agent.md` files in `.github/agents/`. Present a candidate table:
 ```markdown
 | Agent | Candidate reason | Recommendation |
 |---|---|---|
-| [name] | [why: extension candidate, split/merge target, deprecation] | [extend / split / merge / create new] |
+| [name] | [why: extension candidate, split/merge target, deprecation, complex workflow] | [extend / split / merge / create new / extract flow] |
 ```
+
+If the agent being designed or modified has a complex procedural workflow (see **Flow Extraction** below), flag it in the candidate reason column and recommend `extract flow`.
 
 Wait for the human to confirm that a *new* agent is the right choice before continuing.
 
@@ -84,6 +86,45 @@ Wait for the human to confirm that a *new* agent is the right choice before cont
 ### Step 4 — Save
 
 Save to `.github/agents/<kebab-case-name>.agent.md`.
+
+---
+
+## Flow Extraction
+
+### Recognizing Flow Extraction Candidates
+
+When designing an agent whose workflow has **any** of the following, the workflow should be extracted as a `.flow.md` artifact:
+
+- More than 3 sequential phases with delegation steps
+- Loops with iteration limits
+- Branching based on specialist verdicts
+- Parallel delegation steps
+- Sub-process reuse potential across multiple agents
+
+→ Delegate flow creation to the **Meta Flow Designer**. The resulting agent becomes a **thin agent**.
+
+### When NOT to Extract
+
+Simple agents with linear, non-branching workflows (≤3 steps, no loops) keep their workflow inline. Flow extraction is for complex procedural agents, not trivial ones.
+
+### Producing Thin Agents
+
+A thin agent **contains**:
+- Identity (who it is, its single responsibility)
+- Constraints (what it must/must not do)
+- Tool access
+- A reference to its flow: *"Execute `<flow-name>.flow.md` using the Flow Executor pattern"*
+- Any project-specific customization hooks
+
+A thin agent does **NOT** contain:
+- Multi-phase workflow steps
+- Loop definitions
+- Branching logic based on specialist verdicts
+- Iteration limits
+
+### Flow Executor Dependency
+
+When creating a thin agent that references a flow, verify the project has a **Flow Executor** agent (`flow-executor.agent.md`). If absent, note that one is needed — the template is available in the meta-agents repository at `.github/agents/flow-executor.agent.md`. The thin agent delegates its execution to the Flow Executor.
 
 ---
 
@@ -168,4 +209,5 @@ tools: [list]
 | Vague description | Write a precise trigger condition |
 | All tools listed | Allowlist only what's needed |
 | Delegating file writing to a cheaper sub-agent | Agent files are short (~80–150 lines); sub-agent coordination overhead exceeds token savings; judgment continues into writing — stay single-actor |
+| Complex workflow inlined in agent | Extract to a `.flow.md`; delegate creation to Meta Flow Designer; produce a thin agent |
 | "Temporary" violations | There is no temporary; violations become the baseline |
